@@ -1,0 +1,694 @@
+/* =====================================================================
+   POUR MARIAMA — Cadeau d'anniversaire numérique
+   Identité visuelle : bordeaux profond + or lumineux. Aucun rose.
+===================================================================== */
+
+:root {
+  /* Palette */
+  --burgundy-deep:   #350812;
+  --burgundy:        #5A1020;
+  --burgundy-light:  #7A1F32;
+  --gold:            #C9A45C;
+  --gold-light:      #E6C766;
+  --yellow-gold:     #F2D675;
+  --ivory:           #FFF9F0;
+  --cream:           #F8F1E7;
+  --white-warm:      #FFFDF8;
+  --brown-warm:      #3A1717;
+
+  /* Rôles */
+  --bg: var(--burgundy-deep);
+  --surface: var(--burgundy);
+  --text-on-dark: var(--cream);
+  --text-on-light: var(--burgundy-deep);
+
+  /* Typo */
+  --font-display: 'Cormorant Garamond', 'Marcellus', serif;
+  --font-title: 'Marcellus', 'Cormorant Garamond', serif;
+
+  /* Rythme */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.75rem;
+  --space-4: 2.75rem;
+  --space-5: 4.5rem;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 10px;
+
+  --shadow-deep: 0 20px 60px rgba(20, 3, 8, 0.55);
+  --transition-soft: 400ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* =====================================================================
+   RESET & BASE
+===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text-on-dark);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+
+h1, h2, h3 { font-family: var(--font-title); margin: 0; font-weight: 400; }
+
+p { margin: 0 0 1em; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Ne jamais empêcher le zoom, ne jamais désactiver le focus visible */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 3px solid var(--gold-light);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(230, 199, 102, 0.28);
+  border-radius: 6px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visually-hidden-input {
+  position: absolute;
+  opacity: 0;
+  height: 1px; width: 1px;
+  pointer-events: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--gold-light);
+  color: var(--burgundy-deep);
+  padding: 0.75em 1.25em;
+  z-index: 999;
+  border-radius: 0 0 var(--radius-sm) 0;
+  font-weight: 600;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* =====================================================================
+   LAYOUT DE BASE DES ÉCRANS
+===================================================================== */
+.screen {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-2);
+  overflow: hidden;
+}
+
+.section-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.section-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Fond bordeaux avec dégradé et texture subtile pour chaque écran */
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(230,199,102,0.10), transparent 60%),
+    radial-gradient(ellipse 90% 70% at 100% 110%, rgba(201,164,92,0.08), transparent 60%),
+    linear-gradient(160deg, var(--burgundy-deep) 0%, var(--burgundy) 55%, var(--burgundy-deep) 100%);
+  z-index: 0;
+}
+
+/* =====================================================================
+   HALOS / LUMIÈRE DORÉE
+===================================================================== */
+.halo {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.halo--lock {
+  width: 420px; height: 420px;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, var(--gold-light), transparent 70%);
+  animation: halo-breathe 7s ease-in-out infinite;
+}
+.halo--warm {
+  width: 380px; height: 380px;
+  top: 10%; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, var(--yellow-gold), transparent 70%);
+  animation: halo-breathe 8s ease-in-out infinite;
+}
+.halo--final {
+  width: 520px; height: 520px;
+  top: 5%; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, var(--gold-light), transparent 70%);
+  opacity: 0.7;
+  animation: halo-breathe 6s ease-in-out infinite;
+}
+@keyframes halo-breathe {
+  0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.65; transform: translateX(-50%) scale(1.08); }
+}
+
+/* =====================================================================
+   FLEURS DÉCORATIVES (SVG)
+===================================================================== */
+.flower {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+  animation: flower-sway 9s ease-in-out infinite;
+}
+.flower.small { width: 74px; height: 74px; }
+
+.flower--corner-tl { top: 2%; left: 2%; transform-origin: top left; }
+.flower--corner-br { bottom: 2%; right: 2%; transform-origin: bottom right; animation-delay: 1.2s; }
+.flower--bouquet {
+  width: 260px; height: 210px;
+  top: -6%; left: 50%;
+  transform: translateX(-50%);
+  animation: flower-sway 10s ease-in-out infinite;
+}
+
+@keyframes flower-sway {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(2deg) translateY(-6px); }
+}
+.flower--corner-tl, .flower--corner-br { }
+.flower--corner-tl { animation-name: flower-sway-tl; }
+.flower--corner-br { animation-name: flower-sway-br; }
+@keyframes flower-sway-tl {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(2deg) translateY(-4px); }
+}
+@keyframes flower-sway-br {
+  0%, 100% { transform: rotate(3deg); }
+  50% { transform: rotate(-2deg) translateY(-4px); }
+}
+
+/* =====================================================================
+   COUCHES DE DÉCORATIONS DYNAMIQUES (pétales / étincelles / confettis)
+   Générées en JS, animées uniquement via transform + opacity
+===================================================================== */
+.deco-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -5vh;
+  width: 14px;
+  height: 18px;
+  border-radius: 60% 5% 60% 5%;
+  opacity: 0.85;
+  will-change: transform, opacity;
+  animation: petal-fall linear forwards;
+}
+@keyframes petal-fall {
+  0% { transform: translate3d(0, -5vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.75; }
+  100% { transform: translate3d(var(--drift, 40px), 110vh, 0) rotate(320deg); opacity: 0; }
+}
+
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  box-shadow: 0 0 8px 2px rgba(230,199,102,0.8);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: sparkle-pulse 2.6s ease-in-out infinite;
+}
+@keyframes sparkle-pulse {
+  0%, 100% { opacity: 0; transform: scale(0.6); }
+  50% { opacity: 0.95; transform: scale(1.15); }
+}
+
+.confetti {
+  position: absolute;
+  top: -5vh;
+  width: 10px;
+  height: 14px;
+  opacity: 0.9;
+  will-change: transform, opacity;
+  animation: confetti-fall linear forwards;
+}
+@keyframes confetti-fall {
+  0% { transform: translate3d(0,-5vh,0) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  100% { transform: translate3d(var(--drift, 60px), 110vh, 0) rotate(540deg); opacity: 0; }
+}
+
+/* =====================================================================
+   ÉCRAN DE VERROUILLAGE
+===================================================================== */
+.lock-screen {
+  background: var(--burgundy-deep);
+}
+.lock-content {
+  position: relative;
+  z-index: 2;
+  max-width: 380px;
+  margin: 0 auto;
+  text-align: center;
+}
+.lock-kicker { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.lock-title {
+  font-size: clamp(1.7rem, 6vw, 2.3rem);
+  color: var(--ivory);
+  text-shadow: 0 0 24px rgba(230,199,102,0.35);
+  margin-bottom: 0.6rem;
+}
+.lock-sub {
+  color: var(--gold-light);
+  font-size: 1.1rem;
+  margin-bottom: var(--space-3);
+}
+
+.code-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: var(--space-2);
+}
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: transparent;
+  transition: background var(--transition-soft), transform var(--transition-soft), box-shadow var(--transition-soft);
+}
+.dot.filled {
+  background: var(--gold-light);
+  box-shadow: 0 0 10px 2px rgba(230,199,102,0.7);
+  transform: scale(1.1);
+}
+.code-indicators.shake {
+  animation: shake 480ms ease;
+}
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+.dot.error {
+  border-color: #c65a4a;
+}
+
+.code-feedback {
+  min-height: 1.4em;
+  color: var(--gold-light);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2);
+}
+.code-feedback.is-error { color: #e08a7a; }
+.code-feedback.is-success { color: var(--yellow-gold); }
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.key {
+  background: rgba(122, 31, 50, 0.35);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 164, 92, 0.4);
+  color: var(--ivory);
+  font-size: 1.4rem;
+  font-family: var(--font-title);
+  border-radius: var(--radius-md);
+  padding: 0.9em 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 20px rgba(0,0,0,0.25);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+.key:hover {
+  background: rgba(122, 31, 50, 0.55);
+  box-shadow: 0 0 18px rgba(230,199,102,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.key:active,
+.key.is-pressed {
+  transform: scale(0.92);
+  background: rgba(201,164,92,0.25);
+}
+.key--delete { font-size: 1.2rem; color: var(--gold-light); }
+.key--empty { background: transparent; border: none; box-shadow: none; pointer-events: none; }
+
+/* =====================================================================
+   TRANSITION D'OUVERTURE DU CADEAU
+===================================================================== */
+.gift-opening-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: radial-gradient(circle at 50% 50%, rgba(242,214,117,0.9), rgba(53,8,18,0.98) 65%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 900ms ease;
+}
+.gift-opening-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.gift-opening-overlay.fade-out {
+  opacity: 0;
+}
+
+.gift-experience {
+  position: relative;
+}
+
+/* =====================================================================
+   TITRES LUMINEUX & TEXTE
+===================================================================== */
+.glow-title {
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  color: var(--ivory);
+  text-shadow: 0 0 30px rgba(230,199,102,0.4), 0 0 2px rgba(255,253,248,0.4);
+  margin-bottom: var(--space-2);
+  line-height: 1.25;
+}
+.small-title { font-size: clamp(1.5rem, 5vw, 2.1rem); }
+
+.lede {
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+  color: var(--cream);
+  max-width: 46ch;
+  margin: 0 auto var(--space-3);
+}
+
+/* =====================================================================
+   BOUTON "CONTINUER"
+===================================================================== */
+.btn-continue {
+  margin-top: var(--space-3);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  color: var(--burgundy-deep);
+  border: none;
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  padding: 0.85em 2.2em;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(201,164,92,0.35), inset 0 1px 0 rgba(255,255,255,0.5);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.btn-continue:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(230,199,102,0.5), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.btn-continue:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* =====================================================================
+   POÈME
+===================================================================== */
+.poem-card {
+  position: relative;
+  background: linear-gradient(160deg, var(--cream), var(--ivory));
+  color: var(--burgundy-deep);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(201,164,92,0.6);
+  padding: var(--space-4) var(--space-3);
+  box-shadow: var(--shadow-deep);
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(24px);
+  animation: reveal-up 900ms var(--transition-soft) forwards;
+  animation-delay: 200ms;
+}
+.poem-line {
+  font-size: 1.2rem;
+  margin-bottom: 0.5em;
+}
+.poem-signature {
+  margin-top: 1em;
+  font-style: normal;
+  color: var(--burgundy-light);
+  font-weight: 600;
+}
+@keyframes reveal-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================================
+   MUSIQUE
+===================================================================== */
+.music-player {
+  position: relative;
+  background: rgba(122,31,50,0.35);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(201,164,92,0.4);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-3);
+  box-shadow: var(--shadow-deep);
+}
+
+.music-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 30px rgba(230, 199, 102, 0.25), var(--shadow-deep);
+  margin-bottom: var(--space-2);
+}
+.music-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* =====================================================================
+   GALERIE
+===================================================================== */
+.gallery-grid {
+  list-style: none;
+  margin: var(--space-3) 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+.gallery-item--1 { transform: rotate(-2deg); }
+.gallery-item--2 { transform: rotate(2deg); margin-top: 1.5rem; }
+.gallery-item--3 { transform: rotate(1.5deg); margin-top: -0.5rem; }
+.gallery-item--4 { transform: rotate(-1.5deg); margin-top: 1rem; }
+
+.gallery-thumb {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: var(--cream);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+.gallery-thumb img {
+  border-radius: 4px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.gallery-thumb:hover {
+  transform: translateY(-6px) rotate(0deg) scale(1.02);
+  box-shadow: 0 18px 40px rgba(230,199,102,0.35);
+}
+
+.gallery-modal[hidden] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+}
+.gallery-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 3, 8, 0.88);
+}
+.gallery-modal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: var(--cream);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gold);
+  text-align: center;
+}
+.gallery-modal-content img {
+  max-height: 70vh;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+.gallery-modal-caption {
+  color: var(--burgundy-deep);
+  margin: 0.75em 0;
+}
+.gallery-modal-close {
+  background: var(--burgundy);
+  color: var(--ivory);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 0.5em 1.5em;
+}
+
+/* =====================================================================
+   PORTRAIT DE MARIAMA
+===================================================================== */
+.portrait-frame {
+  position: relative;
+  width: min(280px, 70vw);
+  margin: 0 auto var(--space-3);
+  padding: 10px;
+  background: linear-gradient(160deg, var(--gold), var(--gold-light));
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 0 60px rgba(230,199,102,0.3);
+}
+.portrait-img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid var(--burgundy-deep);
+}
+
+/* =====================================================================
+   LETTRE
+===================================================================== */
+.letter-card {
+  position: relative;
+  background: linear-gradient(170deg, var(--ivory), var(--cream));
+  color: var(--brown-warm);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gold);
+  padding: var(--space-4) var(--space-3);
+  box-shadow: var(--shadow-deep);
+  text-align: left;
+}
+.letter-title {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  color: var(--burgundy);
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+.letter-body p {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  margin-bottom: 1em;
+}
+.letter-signature {
+  text-align: right;
+  color: var(--burgundy-light);
+  font-weight: 600;
+  margin-top: var(--space-2);
+}
+.letter-corner { width: 56px; height: 56px; position: absolute; opacity: 0.9; }
+.letter-corner--tl { top: -18px; left: -18px; }
+.letter-corner--tr { top: -18px; right: -18px; transform: scaleX(-1); }
+.letter-corner--bl { bottom: -18px; left: -18px; transform: scaleY(-1); }
+.letter-corner--br { bottom: -18px; right: -18px; transform: scale(-1); }
+
+/* =====================================================================
+   FINAL
+===================================================================== */
+.final-section {
+  min-height: 100dvh;
+}
+.final-signature {
+  font-size: 1.3rem;
+  color: var(--gold-light);
+  margin-top: var(--space-2);
+}
+
+/* =====================================================================
+   RESPONSIVE
+===================================================================== */
+@media (min-width: 720px) {
+  .gallery-grid { grid-template-columns: repeat(4, 1fr); }
+  .section-inner { max-width: 680px; }
+}
+
+@media (max-width: 420px) {
+  .keypad { max-width: 280px; }
+  .flower { width: 80px; height: 80px; }
+  .flower.small { width: 56px; height: 56px; }
+  .letter-corner { width: 40px; height: 40px; }
+}
+
+/* =====================================================================
+   PREFERS REDUCED MOTION — le site reste entièrement fonctionnel
+===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .deco-layer { display: none; }
+  .flower { animation: none; }
+}
